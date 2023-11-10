@@ -20,6 +20,7 @@ const inicialState= {
     productos: [],
     error: null,
     loading: false,
+    productoeliminar: null,
 }
 
 export default function(state = inicialState, action) {
@@ -39,6 +40,8 @@ export default function(state = inicialState, action) {
                 productos: [...state.productos, action.payload]
             })
         case AGREGAR_PRODUCTO_ERROR:
+        case COMENZAR_DESCARGA_ERROR:
+        case ELIMINAR_PRODUCTO_ERROR:
             return ({
                 ...state,
                 loading: false,
@@ -51,11 +54,18 @@ export default function(state = inicialState, action) {
                 error: null,
                 productos: action.payload
             })
-        case COMENZAR_DESCARGA_ERROR:
+        case OBTENER_PRODUCTO_ELIMINAR:
             return ({
                 ...state,
-                loading: false,
-                error: true,
+                productoeliminar: action.payload,
+                error: null,
+            })
+        case ELIMINAR_PRODUCTO_EXITO:  
+            return ({
+                ...state,
+                error: null,
+                productos: state.productos.filter(producto => producto.id !== state.productoeliminar),
+                productoeliminar : null
             })
         default:
             return state;

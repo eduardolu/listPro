@@ -58,7 +58,6 @@ export const obtenerProductosAction = () => {
             const respuesta = await clienteAxios.get('/productos');
             dispatch(descargarProductosExitosa(respuesta.data));
         } catch (error) {
-            console.log(error);
             dispatch(descargarProductosError());
         }
     }
@@ -69,7 +68,7 @@ const descargarProductos = () => ({
 }); 
 
 const descargarProductosExitosa = (productos) => ({ 
-    tyoe: COMENZAR_DESCARGA_EXITO,
+    type: COMENZAR_DESCARGA_EXITO,
     payload: productos
 });
 
@@ -77,3 +76,35 @@ const descargarProductosError = () => ({
     type: COMENZAR_DESCARGA_ERROR,
     payload: true
 }); 
+
+export const borrarProductoAction = (id) => {
+    return async(dispatch) => {
+        dispatch(obtenerProductoEliminar(id));
+        try {
+            await clienteAxios.delete(`/productos/${id}`);
+            dispatch(eliminarProductoExito());
+            Swal.fire(
+                'Eliminado!',
+                'El producto se elimino correctamente',
+                'success'
+            )
+        } catch (error) {
+            console.log(error);
+            dispatch(eliminarProductoError());
+        }
+    }   
+}
+
+const obtenerProductoEliminar = (id) => ({
+    type: OBTENER_PRODUCTO_ELIMINAR,
+    payload: id
+});
+
+const eliminarProductoExito = () => ({  
+    type: ELIMINAR_PRODUCTO_EXITO,
+});
+
+const eliminarProductoError = () => ({
+    type: ELIMINAR_PRODUCTO_ERROR,
+    payload: true
+});
