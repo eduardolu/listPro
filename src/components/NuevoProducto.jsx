@@ -2,9 +2,11 @@ import { useDispatch,useSelector } from "react-redux"
 
 import {crearNuevoProductoAction} from '../actions/productosAction'
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { mostrarAlerta, ocultarAlertaAction } from "../actions/alertaAction";
 
-export const NuevoProducto = ({history}) => {
-
+export const NuevoProducto = () => {
+    const history = useNavigate();
     const [nombre, setNombre] = useState('');
     const [precio, setPrecio] = useState(0);
 
@@ -12,20 +14,25 @@ export const NuevoProducto = ({history}) => {
 
     const cargando = useSelector(state => state.productos.loading);
     const error = useSelector(state => state.productos.error);
+    const alerta = useSelector(state => state.alerta.alerta);
 
     const agregarProducto = (producto) => distach(crearNuevoProductoAction(producto));
     const submitNuevoProducto = e => {
         e.preventDefault();
         if(nombre.trim() === '' || precio <= 0){
+            const respuesta = {
+                msg:'todos los campos son obligatorios',
+                classes:'alert alert-danger text-center text-uppercase p3'
+            }
+            distach(mostrarAlerta(respuesta));
             return;
         }   
-        // const nombre = e.target.nombre.value;
-        // const precio = e.target.precio.value;
+        distach(ocultarAlertaAction());
         agregarProducto({
             nombre,
             precio
         })
-        history.push('/');
+        history('/');
     }
 
   return (
@@ -36,7 +43,7 @@ export const NuevoProducto = ({history}) => {
                     <h2 className='text-center mb-4 font-weight-bold'>
                         agregar nuevo producto
                      </h2>
-
+                    {alerta ? <p className={alerta.classes}>{alerta.msg}</p> : null}
                      <form onSubmit={submitNuevoProducto}>
                         <div className='form-group'>
                             <label>Nombre de producto</label>  

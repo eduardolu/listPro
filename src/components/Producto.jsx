@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import { borrarProductoAction } from '../actions/productosAction';
+import { borrarProductoAction, obtenerProductoEditarAction } from '../actions/productosAction';
 import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 
@@ -26,6 +26,7 @@ export const Producto = (producto) => {
           })
         }
         const redireccionarEdicion = producto => {
+            dispatch(obtenerProductoEditarAction(producto));
             history(`/productos/editar/${producto.producto.id}`)
         }
   return (

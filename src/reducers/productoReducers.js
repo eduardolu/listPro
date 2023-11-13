@@ -9,10 +9,9 @@ import {
     ELIMINAR_PRODUCTO_EXITO,
     ELIMINAR_PRODUCTO_ERROR,
     OBTENER_PRODUCTO_EDITAR,
+    COMENZAR_EDICION_PRODUCTO,
     EDITAR_PRODUCTO_EXITO,
     EDITAR_PRODUCTO_ERROR,
-    MOSTRAR_ALERTA,
-    OCULTAR_ALERTA,
 } from '../types';
 
 
@@ -23,7 +22,7 @@ const inicialState= {
     productoeliminar: null,
 }
 
-export default function(state = inicialState, action) {
+export const productoReducer =(state = inicialState, action)=> {
     switch(action.type) {
         case AGREGAR_PRODUCTO:
         case COMENZAR_DESCARGA_PRODUCTOS:
@@ -42,6 +41,7 @@ export default function(state = inicialState, action) {
         case AGREGAR_PRODUCTO_ERROR:
         case COMENZAR_DESCARGA_ERROR:
         case ELIMINAR_PRODUCTO_ERROR:
+        case EDITAR_PRODUCTO_ERROR:
             return ({
                 ...state,
                 loading: false,
@@ -66,6 +66,26 @@ export default function(state = inicialState, action) {
                 error: null,
                 productos: state.productos.filter(producto => producto.id !== state.productoeliminar),
                 productoeliminar : null
+            })
+        case OBTENER_PRODUCTO_EDITAR:
+            return ({
+                ...state,
+                error: null,
+                productoeditar: action.payload,
+            })
+        case COMENZAR_EDICION_PRODUCTO:
+            return ({
+                ...state,
+                error: null,
+            })
+        case EDITAR_PRODUCTO_EXITO:
+            return ({
+                ...state,
+                error: null,
+                productos: state.productos.map( producto => 
+                    producto.id === action.payload.id ? producto = action.payload : producto
+                    ),
+                productoeditar: null,
             })
         default:
             return state;
